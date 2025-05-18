@@ -1,0 +1,12 @@
+[
+  {
+    "email": "noor@example.com",
+    "password": "IT197531842",
+    "firstname": "Noor",
+    "lastname": "Ahadi",
+    "result": "https://example.com/result",
+    "rules": "https://example.com/rules",
+    "passport": "https://example.com/passport",
+    "photo": "https://example.com/photo"
+  }
+]

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Official Dashboard</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { margin: 0; background: #f4f4f4; }
+    header, footer {
+      background: #002b5c;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      justify-content: space-between;
+    }
+    header img, footer img {
+      height: 40px;
+    }
+    #login, #dashboard { display: none; padding: 30px; }
+    .login-box {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #aaa;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #002b5c;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 20px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .dashboard-layout {
+      display: flex;
+      min-height: 80vh;
+    }
+    aside {
+      width: 240px;
+      background: #002b5c;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    aside img {
+      height: 40px;
+      margin-bottom: 30px;
+    }
+    aside button {
+      background: white;
+      color: #002b5c;
+      border: none;
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    aside button:hover {
+      background: #d0e0ff;
+    }
+    main {
+      flex: 1;
+      background: #fff;
+      padding: 40px;
+    }
+    @media (max-width: 768px) {
+      .dashboard-layout { flex-direction: column; }
+      aside { width: 100%; flex-direction: row; flex-wrap: wrap; }
+      aside button { flex: 1 1 45%; margin: 5px; }
+    }
+    footer {
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="Logo">
+    <h2>Official Government Dashboard</h2>
+  </header>
+
+  <div id="login">
+    <div class="login-box">
+      <h3>Login</h3>
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p id="loginError" style="color: red; margin-top: 10px;"></p>
+    </div>
+  </div>
+
+  <div id="dashboard">
+    <div class="dashboard-layout">
+      <aside>
+        <img src="logo.png" alt="Sidebar Logo">
+        <button onclick="go('result')">نتیجه اعلان شده</button>
+        <button onclick="go('rules')">قوانین انتقال</button>
+        <button onclick="go('passport')">آپلود تمام صفحات پاسپورت</button>
+        <button onclick="go('photo')">آپلود عکس پرسونلی</button>
+        <button onclick="logout()">خروج</button>
+      </aside>
+      <main>
+        <h3>خوش آمدید، <span id="username"></span></h3>
+        <p>لطفاً از منو گزینه مورد نظر را انتخاب نمایید.</p>
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <img src="logo.png" alt="Footer Logo">
+    <span style="margin-left: 10px;">© 2025 دولت جمهوری ایتالیا</span>
+  </footer>
+
+  <script>
+    let users = [];
+    let currentUser = null;
+
+    window.onload = async () => {
+      document.getElementById("login").style.display = "block";
+      const res = await fetch("data.json");
+      users = await res.json();
+    }
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const user = users.find(u => u.email === email && u.password === password);
+      if (user) {
+        currentUser = user;
+        document.getElementById("username").innerText = ${user.firstname} ${user.lastname};
+        document.getElementById("login").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+      } else {
+        document.getElementById("loginError").innerText = "ایمیل یا رمز عبور اشتباه است.";
+      }
+    }
+
+    function go(linkKey) {
+      if (currentUser && currentUser[linkKey]) {
+        window.open(currentUser[linkKey], "_blank");
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
